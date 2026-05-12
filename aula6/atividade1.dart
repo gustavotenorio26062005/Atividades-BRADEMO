@@ -1,19 +1,32 @@
-// atividade1.dart
+import 'dart:async';
 
-// Função simulada fornecida pelo codelab
-Future<String> fetchRole() => Future.delayed(
-      const Duration(seconds: 2),
-      () => 'Administrador',
-    );
-
-// Resolução do exercício:
-Future<String> reportUserRole() async {
-  final role = await fetchRole();
-  return 'User role: $role';
+class UserError implements Exception {
+  final String message;
+  UserError(this.message);
+  @override
+  String toString() => message;
 }
 
-void main() async {
-  print('Buscando papel do usuário...');
-  final result = await reportUserRole();
-  print(result);
+Future<String> fetchNewUsername() =>
+    Future.delayed(const Duration(milliseconds: 500), 
+    () => throw UserError('Inappropriate name'));
+
+Future<String> changeUsername() async {
+  try {
+    return await fetchNewUsername();
+  } catch (err) {
+    return err.toString();
+  }
+}
+
+Future<void> main() async {
+  print('Testando changeUsername()...');
+  
+  final result = await changeUsername();
+  
+  if (result == 'Inappropriate name') {
+    print('SUCESSO: Erro capturado e retornado como string.');
+  } else {
+    print('FALHA: O resultado retornado foi "$result"');
+  }
 }
