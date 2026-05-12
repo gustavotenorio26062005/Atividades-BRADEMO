@@ -1,32 +1,30 @@
 import 'dart:async';
 
-class UserError implements Exception {
-  final String message;
-  UserError(this.message);
-  @override
-  String toString() => message;
+Future<String> fetchRole() =>
+    Future.delayed(const Duration(milliseconds: 500), () => 'Administrator');
+
+Future<int> fetchLoginAmount() => 
+    Future.delayed(const Duration(milliseconds: 500), () => 57);
+
+Future<String> reportUserRole() async {
+  final role = await fetchRole();
+  return 'User role: $role';
 }
 
-Future<String> fetchNewUsername() =>
-    Future.delayed(const Duration(milliseconds: 500), 
-    () => throw UserError('Inappropriate name'));
-
-Future<String> changeUsername() async {
-  try {
-    return await fetchNewUsername();
-  } catch (err) {
-    return err.toString();
-  }
+Future<String> reportLogins() async {
+  final logins = await fetchLoginAmount();
+  return 'Total number of logins: $logins';
 }
 
+// Função principal para teste da atividade
 Future<void> main() async {
-  print('Testando changeUsername()...');
+  print('Iniciando Testes da Atividade 1...');
   
-  final result = await changeUsername();
+  final roleResult = await reportUserRole();
+  print(roleResult); // Saída esperada: User role: Administrator
   
-  if (result == 'Inappropriate name') {
-    print('SUCESSO: Erro capturado e retornado como string.');
-  } else {
-    print('FALHA: O resultado retornado foi "$result"');
-  }
+  final loginResult = await reportLogins();
+  print(loginResult); // Saída esperada: Total number of logins: 57
+  
+  print('Testes concluídos com sucesso.');
 }
